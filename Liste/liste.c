@@ -3,13 +3,7 @@
 #include <stdlib.h>
 
 node_t * list_create(void) {
-    node_t* liste = (node_t*)malloc(sizeof(node_t));
-    if (liste == NULL) {
-        fprintf(stderr, "Erreur d'allocation mémoire\n");
-        exit(EXIT_FAILURE);
-    }
-    liste->next = NULL;
-    return liste;
+    return NULL;
 }
 
 void * list_get_data(const node_t * node) {
