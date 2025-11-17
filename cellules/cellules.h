@@ -1,7 +1,7 @@
-#include "../stack/stack.h"
-
 #ifndef CELLULES_H
 #define CELLULES_H
+
+#include "../stack/stack.h"
 
 typedef struct token {
     enum { VALUE, REF, OPERATOR } type;
@@ -19,6 +19,17 @@ typedef struct cell {
     int nbTokens;     
 } s_cell;
 
+typedef struct operateur {
+    char operateur;
+    void (*op_fonction) (my_stack_t * eval);    
+} s_operateur;
+
+extern s_operateur operateurs[];
+
 void analyser_chaine(s_cell *c);
+void op_add(my_stack_t *eval);
+void op_sustr(my_stack_t *eval);
+void op_mul(my_stack_t *eval);
+void op_div(my_stack_t *eval);
 
 #endif
