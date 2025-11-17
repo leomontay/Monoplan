@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "../stack/stack.h"
-#include <ctype.h>
-#include <string.h>
 
 #ifndef CELLULES_H
 #define CELLULES_H
@@ -12,7 +8,7 @@ typedef struct token {
     union {
         double cst;          
         char ref[10];       
-        char op;            
+        void (*operator) (my_stack_t * eval);            
     } value;
 } s_token;
 

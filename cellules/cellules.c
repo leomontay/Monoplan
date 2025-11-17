@@ -40,7 +40,8 @@ void analyser_chaine(s_cell *c) {
         }
         else if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/') { // pour les opérateurs + - * /
             c->tokens[c->nbTokens].type = OPERATOR;
-            c->tokens[c->nbTokens].value.op = s[i];
+            c->tokens[c->nbTokens].value.ref[0] = s[i];
+            c->tokens[c->nbTokens].value.ref[1] = '\0';
             c->nbTokens++;
             i++;
         }

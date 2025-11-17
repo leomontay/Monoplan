@@ -22,7 +22,7 @@ int main(void) {
             printf("TOKEN %d : REF = %s\n", i, t.value.ref);
         }
         else if (t.type == OPERATOR) {
-            printf("TOKEN %d : OPERATEUR = %c\n", i, t.value.op);
+            printf("TOKEN %d : OPERATEUR = %c\n", i, t.value.operator);
         }
     }
 }
