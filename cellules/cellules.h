@@ -13,6 +13,7 @@ typedef struct token {
 } s_token;
 
 typedef struct cell {
+    char nom[8];   
     char contenu[50];   
     double val;     
     s_token tokens[20];     
