@@ -65,18 +65,20 @@ void evaluer_sous_graphe(s_cell *s_init)
 
     calculer_degres_negatifs(s_init);
 
-
     liste = STACK_CREATE(MAX_LISTE, s_cell *);
     if (liste == NULL) {
-        fprintf(stderr, "Erreur : impossible de créer la pile pour le jalon 3\n");
+        fprintf(stderr, "Erreur\n");
         return;
     }
 
-    STACK_PUSH(liste, s_init, s_cell *);
 
+    if (liste->free < liste->nbMaxElement) {
+        ((s_cell **)(liste->value))[liste->free++] = s_init;
+    }
 
     while (!STACK_EMPTY(liste)) {
-        courant = STACK_POP(liste, s_cell *);
+
+        courant = ((s_cell **)(liste->value))[--liste->free];
 
         evaluer_cellule(courant);
 
@@ -87,7 +89,10 @@ void evaluer_sous_graphe(s_cell *s_init)
                 succ->degre_neg--;
 
                 if (succ->degre_neg == 0) {
-                    STACK_PUSH(liste, succ, s_cell *);
+                    
+                    if (liste->free < liste->nbMaxElement) {
+                        ((s_cell **)(liste->value))[liste->free++] = succ;
+                    }
                 }
             }
         }
@@ -95,3 +100,4 @@ void evaluer_sous_graphe(s_cell *s_init)
 
     STACK_REMOVE(liste);
 }
+
