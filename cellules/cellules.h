@@ -3,6 +3,8 @@
 
 #include "../stack/stack.h"
 
+#define MAX_SUCC 10
+
 typedef struct token {
     enum { VALUE, REF, OPERATOR } type;
     union {
@@ -17,7 +19,13 @@ typedef struct cell {
     char contenu[50];   
     double val;     
     s_token tokens[20];     
-    int nbTokens;     
+    int nbTokens;
+    
+    struct cell *successeurs[MAX_SUCC];  // liste des successeurs
+    int nb_successeurs;                  // nombre de successeurs utilisés
+    int degre_neg;                       // degré négatif (nombre de prédécesseurs dans le sous-graphe)
+    int marque;                          // marqué ou pas (pour éviter de revisiter en récursif)
+
 } s_cell;
 
 typedef struct operateur {

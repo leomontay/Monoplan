@@ -151,9 +151,6 @@ double evaluer_cellule(s_cell *cellule)
                     STACK_REMOVE(pile);
                     return 0.0;
                 }
-
-                
-                
                 jeton->value.operator(pile);
             }
         }
