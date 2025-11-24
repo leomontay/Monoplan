@@ -28,6 +28,7 @@ typedef struct operateur {
 extern s_operateur operateurs[];
 
 void analyser_chaine(s_cell *c);
+double evaluer_cellule(s_cell *cellule);
 void op_add(my_stack_t *eval);
 void op_sustr(my_stack_t *eval);
 void op_mul(my_stack_t *eval);
