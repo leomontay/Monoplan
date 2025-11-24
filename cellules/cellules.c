@@ -26,7 +26,7 @@ void op_sustr(my_stack_t *eval) {
     double b;
     STACK_POP2(eval, a, double);
     STACK_POP2(eval, b, double);
-    STACK_PUSH(eval, a - b, double);
+    STACK_PUSH(eval, b - a, double);
 }
 
 void op_mul(my_stack_t *eval) {
@@ -42,7 +42,7 @@ void op_div(my_stack_t *eval) {
     double b;   
     STACK_POP2(eval, a, double);
     STACK_POP2(eval, b, double);
-    STACK_PUSH(eval, a / b, double);
+    STACK_PUSH(eval, b / a, double);
 }
 
 void analyser_chaine(s_cell *c) {
