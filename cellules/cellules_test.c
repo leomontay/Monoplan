@@ -5,8 +5,7 @@
 #include <string.h>
 #include "../stack/stack.h"
 
-s_cell *tableau_cellules[10];
-int nb_cellules = 0;
+
 
 int main(void) {
     s_cell c = {0};

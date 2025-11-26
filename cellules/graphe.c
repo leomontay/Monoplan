@@ -22,7 +22,7 @@ void ajouter_successeur(s_cell *src, s_cell *dest)
         src->successeurs[src->nb_successeurs] = dest;
         src->nb_successeurs++;
     } else {
-        fprintf(stderr, "Trop de successeurs pour la cellule %s\n", src->nom);
+        fprintf(stderr, "Erreur%s\n", src->nom);
     }
 }
 
@@ -53,51 +53,47 @@ void calculer_degres_negatifs(s_cell *s_init)
     calculer_degres_rec(s_init);
 }
 
+void reset_marque_et_degre(s_cell *c)
+{
+    if (!c || c->marque == 2) return;
+
+    c->marque = 2;    
+    c->degre_neg = 0;
+
+    for (int i = 0; i < c->nb_successeurs; i++)
+        reset_marque_et_degre(c->successeurs[i]);
+
+    c->marque = 0;    
+}
+
 
 void evaluer_sous_graphe(s_cell *s_init)
 {
-    my_stack_t *liste;
-    s_cell *courant;
-    int i;
+    if (!s_init) return;
 
-    if (s_init == NULL)
-        return;
-
-    calculer_degres_negatifs(s_init);
-
-    liste = STACK_CREATE(MAX_LISTE, s_cell *);
-    if (liste == NULL) {
-        fprintf(stderr, "Erreur\n");
-        return;
-    }
+    reset_marque_et_degre(s_init);
+    calculer_degres_rec(s_init);
 
 
-    if (liste->free < liste->nbMaxElement) {
-        ((s_cell **)(liste->value))[liste->free++] = s_init;
-    }
+    s_cell *queue[100];
+    int q_start = 0, q_end = 0;
+    queue[q_end++] = s_init;
 
-    while (!STACK_EMPTY(liste)) {
 
-        courant = ((s_cell **)(liste->value))[--liste->free];
+    while (q_start < q_end)
+    {
+        s_cell *c = queue[q_start++];
 
-        evaluer_cellule(courant);
+        evaluer_cellule(c);
 
-        for (i = 0; i < courant->nb_successeurs; i++) {
-            s_cell *succ = courant->successeurs[i];
+        for (int i = 0; i < c->nb_successeurs; i++)
+        {
+            s_cell *s = c->successeurs[i];
+            s->degre_neg--;
 
-            if (succ != NULL) {
-                succ->degre_neg--;
-
-                if (succ->degre_neg == 0) {
-                    
-                    if (liste->free < liste->nbMaxElement) {
-                        ((s_cell **)(liste->value))[liste->free++] = succ;
-                    }
-                }
-            }
+            if (s->degre_neg == 0)
+                queue[q_end++] = s;
         }
     }
-
-    STACK_REMOVE(liste);
 }
 

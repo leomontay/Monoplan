@@ -3,70 +3,68 @@
 #include "../cellules/cellules.h"
 #include "graphe.h"
 
-s_cell *tableau_cellules[10];
+s_cell *tableau_cellules[100];
 int nb_cellules = 0;
 
 int main(void)
 {
+    s_cell A1 = {0}, A2 = {0}, A3 = {0};
+    s_cell B1 = {0}, B2 = {0}, B3 = {0};
 
-    s_cell d2 = {0};
-    s_cell d3 = {0};
-    s_cell a4 = {0};
-    s_cell a5 = {0};
-    s_cell c5 = {0};
+    strcpy(A1.nom, "A1"); strcpy(A2.nom, "A2"); strcpy(A3.nom, "A3");
+    strcpy(B1.nom, "B1"); strcpy(B2.nom, "B2"); strcpy(B3.nom, "B3");
 
+    strcpy(A1.contenu, "=2");
+    strcpy(A2.contenu, "=3");
+    strcpy(A3.contenu, "=A1 A2 +");
+    strcpy(B1.contenu, "=A3 1 +");
+    strcpy(B2.contenu, "=B1 1 +");
+    strcpy(B3.contenu, "=B2 1 +");
 
-    strcpy(d2.nom, "D2");
-    strcpy(d3.nom, "D3");
-    strcpy(a4.nom, "A4");
-    strcpy(a5.nom, "A5");
-    strcpy(c5.nom, "C5");
+    analyser_chaine(&A1);
+    analyser_chaine(&A2);
+    analyser_chaine(&A3);
+    analyser_chaine(&B1);
+    analyser_chaine(&B2);
+    analyser_chaine(&B3);
 
+  
+    ajouter_successeur(&A1, &A3);
+    ajouter_successeur(&A2, &A3);
+    ajouter_successeur(&A3, &B1);
+    ajouter_successeur(&B1, &B2);
+    ajouter_successeur(&B2, &B3);
 
-    strcpy(d2.contenu, "=2");
-
-    strcpy(d3.contenu, "=3");
-
-    strcpy(a4.contenu, "=D3 10 +");
-
-    strcpy(a5.contenu, "=A4 D3 +");
-
-    strcpy(c5.contenu, "=D2 A5 +");
-
-    analyser_chaine(&d2);
-    analyser_chaine(&d3);
-    analyser_chaine(&a4);
-    analyser_chaine(&a5);
-    analyser_chaine(&c5);
-
-    tableau_cellules[0] = &d2;
-    tableau_cellules[1] = &d3;
-    tableau_cellules[2] = &a4;
-    tableau_cellules[3] = &a5;
-    tableau_cellules[4] = &c5;
-    nb_cellules = 5;
+    tableau_cellules[0] = &A1;
+    tableau_cellules[1] = &A2;
+    tableau_cellules[2] = &A3;
+    tableau_cellules[3] = &B1;
+    tableau_cellules[4] = &B2;
+    tableau_cellules[5] = &B3;
+    nb_cellules = 6;
 
 
-    ajouter_successeur(&d3, &a4);
-    ajouter_successeur(&d3, &a5);
-    ajouter_successeur(&a4, &a5);
-    ajouter_successeur(&d2, &c5);
-    ajouter_successeur(&a5, &c5);
+    
+    evaluer_cellule(&A1);
+    evaluer_cellule(&A2);
+    evaluer_sous_graphe(&A1); 
 
-    printf("=== Evaluation initiale du graphe à partir de D2 ===\n");
-    evaluer_sous_graphe(&d2);
-    printf("D2 = %.2f\n", d2.val);
-    printf("C5 = %.2f\n\n", c5.val);
+    printf("Initial : A1=%.0f A2=%.0f A3=%.0f  B1=%.0f B2=%.0f B3=%.0f\n",
+           A1.val, A2.val, A3.val, B1.val, B2.val, B3.val);
 
-    d2.marque = d3.marque = a4.marque = a5.marque = c5.marque = 0;
-    d2.degre_neg = d3.degre_neg = a4.degre_neg = a5.degre_neg = c5.degre_neg = 0;
+   
+    strcpy(A1.contenu, "=5");
+    analyser_chaine(&A1);
+    evaluer_sous_graphe(&A1); 
 
-    printf("=== Evaluation du sous-graphe à partir de D3 ===\n");
-    evaluer_sous_graphe(&d3);
-    printf("D3 = %.2f\n", d3.val);
-    printf("A4 = %.2f\n", a4.val);
-    printf("A5 = %.2f\n", a5.val);
-    printf("C5 = %.2f\n", c5.val);
+    printf("A1=5  : A1=%.0f A2=%.0f A3=%.0f  B1=%.0f B2=%.0f B3=%.0f\n",
+           A1.val, A2.val, A3.val, B1.val, B2.val, B3.val);
 
+   
+    strcpy(A2.contenu, "=10");
+    analyser_chaine(&A2);
+    evaluer_sous_graphe(&A2); 
+    printf("A2=10 : A1=%.0f A2=%.0f A3=%.0f  B1=%.0f B2=%.0f B3=%.0f\n",
+           A1.val, A2.val, A3.val, B1.val, B2.val, B3.val);
 
 }

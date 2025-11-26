@@ -28,6 +28,10 @@ typedef struct cell {
 
 } s_cell;
 
+extern s_cell *tableau_cellules[100];
+extern int nb_cellules;
+
+
 typedef struct operateur {
     char operateur;
     void (*op_fonction) (my_stack_t * eval);    
