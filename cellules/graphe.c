@@ -21,12 +21,10 @@ void ajouter_successeur(s_cell *src, s_cell *dest)
     if (src->nb_successeurs < MAX_SUCC) {
         src->successeurs[src->nb_successeurs] = dest;
         src->nb_successeurs++;
-    } else {
-        fprintf(stderr, "Erreur%s\n", src->nom);
     }
 }
 
-static void calculer_degres_rec(s_cell *c)
+void calculer_degres_rec(s_cell *c)
 {
     int i;
 
@@ -48,16 +46,12 @@ static void calculer_degres_rec(s_cell *c)
     }
 }
 
-void calculer_degres_negatifs(s_cell *s_init)
-{
-    calculer_degres_rec(s_init);
-}
 
 void reset_marque_et_degre(s_cell *c)
 {
     if (!c || c->marque == 2) return;
 
-    c->marque = 2;    
+    c->marque = 2;
     c->degre_neg = 0;
 
     for (int i = 0; i < c->nb_successeurs; i++)

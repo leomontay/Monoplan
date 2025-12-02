@@ -8,63 +8,79 @@ int nb_cellules = 0;
 
 int main(void)
 {
-    s_cell A1 = {0}, A2 = {0}, A3 = {0};
-    s_cell B1 = {0}, B2 = {0}, B3 = {0};
+    // Déclaration
+    s_cell A1 = (s_cell){0};
+    s_cell B1 = (s_cell){0};
+    s_cell C1 = (s_cell){0}, C2 = (s_cell){0};
+    s_cell E1 = (s_cell){0}, E2 = (s_cell){0}, E3 = (s_cell){0}, E4 = (s_cell){0}, E5 = (s_cell){0};
 
-    strcpy(A1.nom, "A1"); strcpy(A2.nom, "A2"); strcpy(A3.nom, "A3");
-    strcpy(B1.nom, "B1"); strcpy(B2.nom, "B2"); strcpy(B3.nom, "B3");
-
-    strcpy(A1.contenu, "=2");
-    strcpy(A2.contenu, "=3");
-    strcpy(A3.contenu, "=A1 A2 +");
-    strcpy(B1.contenu, "=A3 1 +");
-    strcpy(B2.contenu, "=B1 1 +");
-    strcpy(B3.contenu, "=B2 1 +");
-
+    // 1) TEST FAUX : A1 
+    strcpy(A1.nom, "A1");
+    strcpy(A1.contenu, "A1 +");
     analyser_chaine(&A1);
-    analyser_chaine(&A2);
-    analyser_chaine(&A3);
-    analyser_chaine(&B1);
-    analyser_chaine(&B2);
-    analyser_chaine(&B3);
 
-  
-    ajouter_successeur(&A1, &A3);
-    ajouter_successeur(&A2, &A3);
-    ajouter_successeur(&A3, &B1);
-    ajouter_successeur(&B1, &B2);
-    ajouter_successeur(&B2, &B3);
+    // 2) TEST SIMPLE : B1 = 2
+    strcpy(B1.nom, "B1");
+    strcpy(B1.contenu, "=2");
+    analyser_chaine(&B1);
+
+    // 3) TEST : C2 = C1 * 10
+    strcpy(C1.nom, "C1");
+    strcpy(C1.contenu, "=2");
+
+    strcpy(C2.nom, "C2");
+    strcpy(C2.contenu, "=C1 10 *");
+
+    analyser_chaine(&C1);
+    analyser_chaine(&C2);
+    ajouter_successeur(&C1, &C2);
+
+    // 4) TEST : E5 = E1 + E2 + E3 + E4
+    strcpy(E1.nom, "E1"); strcpy(E2.nom, "E2"); strcpy(E3.nom, "E3"); strcpy(E4.nom, "E4"); strcpy(E5.nom, "E5");
+    strcpy(E1.contenu, "=5");
+    strcpy(E2.contenu, "=5");
+    strcpy(E3.contenu, "=5");
+    strcpy(E4.contenu, "=5");
+    strcpy(E5.contenu, "=E1 E2 + E3 + E4 +");
+
+    analyser_chaine(&E1);
+    analyser_chaine(&E2);
+    analyser_chaine(&E3);
+    analyser_chaine(&E4);
+    analyser_chaine(&E5);
+
+    ajouter_successeur(&E1, &E5);
+    ajouter_successeur(&E2, &E5);
+    ajouter_successeur(&E3, &E5);
+    ajouter_successeur(&E4, &E5);
+
 
     tableau_cellules[0] = &A1;
-    tableau_cellules[1] = &A2;
-    tableau_cellules[2] = &A3;
-    tableau_cellules[3] = &B1;
-    tableau_cellules[4] = &B2;
-    tableau_cellules[5] = &B3;
-    nb_cellules = 6;
+    tableau_cellules[1] = &B1;
+    tableau_cellules[2] = &C1;
+    tableau_cellules[3] = &C2;
+    tableau_cellules[4] = &E1;
+    tableau_cellules[5] = &E2;
+    tableau_cellules[6] = &E3;
+    tableau_cellules[7] = &E4;
+    tableau_cellules[8] = &E5;
+    nb_cellules = 9;
 
 
-    
-    evaluer_cellule(&A1);
-    evaluer_cellule(&A2);
-    evaluer_sous_graphe(&A1); 
+    // Affichages
+    printf("TEST 1 (FAUX) : A1 contenu=\"A1 +\"\n");
+    printf("Resultat A1 = %.2f (attendu 0)\n\n", evaluer_cellule(&A1));
 
-    printf("Initial : A1=%.0f A2=%.0f A3=%.0f  B1=%.0f B2=%.0f B3=%.0f\n",
-           A1.val, A2.val, A3.val, B1.val, B2.val, B3.val);
+    printf("TEST 2 : B1 = 2\n");
+    printf("B1 = %.0f (attendu 2)\n\n", evaluer_cellule(&B1));
 
-   
-    strcpy(A1.contenu, "=5");
-    analyser_chaine(&A1);
-    evaluer_sous_graphe(&A1); 
+    printf("TEST 3 : C2 = C1 * 10\n");
+    evaluer_sous_graphe(&C1);
+    printf("C1=%.0f  C2=%.0f (attendu 20)\n\n", C1.val, C2.val);
 
-    printf("A1=5  : A1=%.0f A2=%.0f A3=%.0f  B1=%.0f B2=%.0f B3=%.0f\n",
-           A1.val, A2.val, A3.val, B1.val, B2.val, B3.val);
-
-   
-    strcpy(A2.contenu, "=10");
-    analyser_chaine(&A2);
-    evaluer_sous_graphe(&A2); 
-    printf("A2=10 : A1=%.0f A2=%.0f A3=%.0f  B1=%.0f B2=%.0f B3=%.0f\n",
-           A1.val, A2.val, A3.val, B1.val, B2.val, B3.val);
+    printf("TEST 4 : E5 = E1 + E2 + E3 + E4\n");
+    evaluer_sous_graphe(&E1);
+    printf("E1=%.0f E2=%.0f E3=%.0f E4=%.0f E5=%.0f (attendu 20)\n",
+           E1.val, E2.val, E3.val, E4.val, E5.val);
 
 }

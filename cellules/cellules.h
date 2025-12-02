@@ -8,8 +8,8 @@
 typedef struct token {
     enum { VALUE, REF, OPERATOR } type;
     union {
-        double cst;          
-        char ref[10];       
+        double cst;    
+        char ref[10];  
         void (*operator) (my_stack_t * eval);            
     } value;
 } s_token;
@@ -21,10 +21,10 @@ typedef struct cell {
     s_token tokens[20];     
     int nbTokens;
     
-    struct cell *successeurs[MAX_SUCC];  // liste des successeurs
-    int nb_successeurs;                  // nombre de successeurs utilisés
-    int degre_neg;                       // degré négatif (nombre de prédécesseurs dans le sous-graphe)
-    int marque;                          // marqué ou pas (pour éviter de revisiter en récursif)
+    struct cell *successeurs[MAX_SUCC];
+    int nb_successeurs;                 
+    int degre_neg;                  
+    int marque;        
 
 } s_cell;
 
