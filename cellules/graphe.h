@@ -9,7 +9,7 @@ extern int nb_cellules;
 
 void ajouter_successeur(s_cell *src, s_cell *dest);
 
-void calculer_degres_negatifs(s_cell *s_init);
+void calculer_nb_predeseseur_rec(s_cell *c);
 
 void evaluer_sous_graphe(s_cell *s_init);
 

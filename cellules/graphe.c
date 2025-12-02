@@ -6,25 +6,25 @@
 #define MAX_LISTE 50
 
 
-void ajouter_successeur(s_cell *src, s_cell *dest)
+void ajouter_successeur(s_cell *src, s_cell *dest_suc)
 {
     int i;
 
-    if (src == NULL || dest == NULL)
+    if (src == NULL || dest_suc == NULL)
         return;
 
     for (i = 0; i < src->nb_successeurs; i++) {
-        if (src->successeurs[i] == dest)
+        if (src->successeurs[i] == dest_suc)
             return;
     }
 
     if (src->nb_successeurs < MAX_SUCC) {
-        src->successeurs[src->nb_successeurs] = dest;
+        src->successeurs[src->nb_successeurs] = dest_suc;
         src->nb_successeurs++;
     }
 }
 
-void calculer_degres_rec(s_cell *c)
+void calculer_nb_predeseseur_rec(s_cell *c)
 {
     int i;
 
@@ -41,7 +41,7 @@ void calculer_degres_rec(s_cell *c)
 
         if (succ != NULL) {
             succ->degre_neg++;
-            calculer_degres_rec(succ);
+            calculer_nb_predeseseur_rec(succ);
         }
     }
 }
@@ -66,7 +66,7 @@ void evaluer_sous_graphe(s_cell *s_init)
     if (!s_init) return;
 
     reset_marque_et_degre(s_init);
-    calculer_degres_rec(s_init);
+    calculer_nb_predeseseur_rec(s_init);
 
 
     s_cell *queue[100];
