@@ -24,7 +24,7 @@ void ajouter_successeur(s_cell *src, s_cell *dest_suc)
     }
 }
 
-void calculer_degré_négatif(s_cell *c) //nb_suseseur_recursive
+void calculer_degre_negatif(s_cell *c) //nb_suseseur_recursive
 {
     int i;
 
@@ -41,7 +41,7 @@ void calculer_degré_négatif(s_cell *c) //nb_suseseur_recursive
 
         if (succ != NULL) {
             succ->degre_neg++;
-            calculer_degré_négatif(succ);
+            calculer_degre_negatif(succ);
         }
     }
 }
@@ -66,7 +66,7 @@ void evaluer_sous_graphe(s_cell *s_init)
     if (!s_init) return;
 
     reset_marque_et_degre(s_init);
-    calculer_degré_négatif(s_init);
+    calculer_degre_negatif(s_init);
 
 
     s_cell *queue[100];
