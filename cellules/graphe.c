@@ -19,12 +19,12 @@ void ajouter_successeur(s_cell *src, s_cell *dest_suc)
     }
 
     if (src->nb_successeurs < MAX_SUCC) {
-        src->successeurs[src->nb_successeurs] = dest_suc;
+        src->successeurs[src->nb_successeurs] = dest_suc; //ajoute dest_suc à la fin de la liste des successeurs
         src->nb_successeurs++;
     }
 }
 
-void calculer_nb_predeseseur_rec(s_cell *c)
+void calculer_degré_négatif(s_cell *c) //nb_suseseur_recursive
 {
     int i;
 
@@ -41,7 +41,7 @@ void calculer_nb_predeseseur_rec(s_cell *c)
 
         if (succ != NULL) {
             succ->degre_neg++;
-            calculer_nb_predeseseur_rec(succ);
+            calculer_degré_négatif(succ);
         }
     }
 }
@@ -66,7 +66,7 @@ void evaluer_sous_graphe(s_cell *s_init)
     if (!s_init) return;
 
     reset_marque_et_degre(s_init);
-    calculer_nb_predeseseur_rec(s_init);
+    calculer_degré_négatif(s_init);
 
 
     s_cell *queue[100];
