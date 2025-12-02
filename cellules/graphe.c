@@ -65,29 +65,49 @@ void evaluer_sous_graphe(s_cell *s_init)
 {
     if (!s_init) return;
 
-    reset_marque_et_degre(s_init);
-    calculer_degre_negatif(s_init);
 
+    for (int i = 0; i < nb_cellules; i++) {
+        if (tableau_cellules[i]) {
+            tableau_cellules[i]->degre_neg = 0;
+        }
+    }
+
+
+    for (int i = 0; i < nb_cellules; i++) {
+        s_cell *src = tableau_cellules[i];
+        if (!src) continue;
+
+        for (int j = 0; j < src->nb_successeurs; j++) {
+            s_cell *dst = src->successeurs[j];
+            if (dst) dst->degre_neg++;
+        }
+    }
+
+    printf("degre %s %d\n", s_init->nom, s_init->degre_neg);
 
     s_cell *queue[100];
     int q_start = 0, q_end = 0;
-    queue[q_end++] = s_init;
 
+    for (int i = 0; i < nb_cellules; i++) {
+        if (tableau_cellules[i] && tableau_cellules[i]->degre_neg == 0) {
+            queue[q_end++] = tableau_cellules[i];
+        }
+    }
 
-    while (q_start < q_end)
-    {
+    while (q_start < q_end) {
         s_cell *c = queue[q_start++];
 
         evaluer_cellule(c);
 
-        for (int i = 0; i < c->nb_successeurs; i++)
-        {
-            s_cell *s = c->successeurs[i];
-            s->degre_neg--;
+        for (int j = 0; j < c->nb_successeurs; j++) {
+            s_cell *s = c->successeurs[j];
+            if (!s) continue;
 
+            s->degre_neg--;
             if (s->degre_neg == 0)
                 queue[q_end++] = s;
         }
     }
 }
+
 
