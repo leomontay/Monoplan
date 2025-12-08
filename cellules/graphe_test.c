@@ -8,7 +8,7 @@ int nb_cellules = 0;
 
 int main(void)
 {
-     s_cell A1 = (s_cell){0};
+    s_cell A1 = (s_cell){0};
     s_cell B1 = (s_cell){0};
     s_cell C1 = (s_cell){0}, C2 = (s_cell){0};
     s_cell E1 = (s_cell){0}, E2 = (s_cell){0}, E3 = (s_cell){0}, E4 = (s_cell){0}, E5 = (s_cell){0};
@@ -85,6 +85,5 @@ int main(void)
 
     printf("TEST 4 : E5 = E1 + E2 + E3 + E4\n");
     evaluer_sous_graphe(&E5);
-    printf("E1=%.0f E2=%.0f E3=%.0f E4=%.0f E5=%.0f (attendu 17)\n",
-           E1.val, E2.val, E3.val, E4.val, E5.val);
+    printf("E1=%.0f E2=%.0f E3=%.0f E4=%.0f E5=%.0f (attendu 17)\n", E1.val, E2.val, E3.val, E4.val, E5.val);
 }

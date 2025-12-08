@@ -1,7 +1,29 @@
-tableur: main.c liste.c
-	gcc -o test main.c liste.c
+CC = gcc
+CFLAGS = -Wall -g `pkg-config --cflags gtk+-3.0`
+LDFLAGS = `pkg-config --libs gtk+-3.0`
 
+SRC = \
+    main.c \
+    gui/gui.c \
+    cellules/cellules.c \
+    liste/liste.c \
+    stack/stack.c
 
+OBJ = $(SRC:.c=.o)
 
+EXEC = monoplan
 
-	gcc -Wall -Wextra -std=c11 -g -Icellules -Iliste -Istack cellules\graphe_test.c cellules\graphe.c cellules\cellules.c liste\liste.c stack\stack.c -o graphe_test.exe
+all: $(EXEC)
+
+$(EXEC): $(OBJ)
+	$(CC) $(OBJ) -o $(EXEC) $(LDFLAGS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(OBJ) $(EXEC)
+
+// make clean
+// make
+// ./monoplan

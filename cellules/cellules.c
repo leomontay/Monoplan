@@ -5,6 +5,9 @@
 #include <string.h>
 #include "../stack/stack.h"
 
+s_cell *tableau_cellules[200];
+int nb_cellules = 0;
+
 s_operateur operateurs[] = {
     {'+', op_add},
     {'-', op_sustr},
@@ -42,6 +45,11 @@ void op_div(my_stack_t *eval) {
     double b;   
     STACK_POP2(eval, a, double);
     STACK_POP2(eval, b, double);
+    if (a == 0) {
+        printf("Erreur : division par zéro.\n");
+        STACK_PUSH(eval, 0.0, double);
+        return;
+    }
     STACK_PUSH(eval, b / a, double);
 }
 
@@ -128,8 +136,6 @@ double evaluer_cellule(s_cell *cellule)
         else if (jeton->type == REF)
         {
             double valeur_ref = 0.0;
-            extern s_cell *tableau_cellules[];
-            extern int nb_cellules;
 
             for (int j = 0; j < nb_cellules; j++)
             {
@@ -160,4 +166,127 @@ double evaluer_cellule(s_cell *cellule)
     cellule->val = resultat;
     STACK_REMOVE(pile);
     return resultat;
+}
+
+void ajouter_successeur(s_cell *src, s_cell *dest_suc)
+{
+    int i;
+
+    if (src == NULL || dest_suc == NULL)
+        return;
+
+    for (i = 0; i < src->nb_successeurs; i++) {
+        if (src->successeurs[i] == dest_suc)
+            return;
+    }
+
+    if (src->nb_successeurs < MAX_SUCC) {
+        src->successeurs[src->nb_successeurs] = dest_suc; //ajoute dest_suc à la fin de la liste des successeurs
+        src->nb_successeurs++;
+    }
+}
+
+void calculer_degre_negatif(s_cell *c) //nb_suseseur_recursive
+{
+    int i;
+
+    if (c == NULL)
+        return;
+
+    if (c->marque)
+        return;
+
+    c->marque = 1;
+
+    for (i = 0; i < c->nb_successeurs; i++) {
+        s_cell *succ = c->successeurs[i];
+
+        if (succ != NULL) {
+            succ->degre_neg++;
+            calculer_degre_negatif(succ);
+        }
+    }
+}
+
+void reset_marque_et_degre(s_cell *c)
+{
+    if (!c || c->marque == 2) return;
+
+    c->marque = 2;
+    c->degre_neg = 0;
+
+    for (int i = 0; i < c->nb_successeurs; i++)
+        reset_marque_et_degre(c->successeurs[i]);
+
+    c->marque = 0;    
+}
+
+
+void evaluer_sous_graphe(s_cell *s_init)
+{
+    if (!s_init) return;
+
+
+    for (int i = 0; i < nb_cellules; i++) {
+        if (tableau_cellules[i]) {
+            tableau_cellules[i]->degre_neg = 0;
+        }
+    }
+
+
+    for (int i = 0; i < nb_cellules; i++) {
+        s_cell *src = tableau_cellules[i];
+        if (!src) continue;
+
+        for (int j = 0; j < src->nb_successeurs; j++) {
+            s_cell *dst = src->successeurs[j];
+            if (dst) dst->degre_neg++;
+        }
+    }
+
+    printf("degre %s %d\n", s_init->nom, s_init->degre_neg);
+
+    s_cell *queue[200];
+    int q_start = 0, q_end = 0;
+
+    for (int i = 0; i < nb_cellules; i++) {
+        if (tableau_cellules[i] && tableau_cellules[i]->degre_neg == 0) {
+            queue[q_end++] = tableau_cellules[i];
+        }
+    }
+
+    while (q_start < q_end) {
+        s_cell *c = queue[q_start++];
+
+        evaluer_cellule(c);
+
+        for (int j = 0; j < c->nb_successeurs; j++) {
+            s_cell *s = c->successeurs[j];
+            if (!s) continue;
+
+            s->degre_neg--;
+            if (s->degre_neg == 0)
+                queue[q_end++] = s;
+        }
+    }
+}
+
+s_cell *ajouter_cellule(int l, int c)
+{
+    s_cell *cell = malloc(sizeof(s_cell));
+
+    // nom : A1, B2, C10...
+    cell->nom[0] = 'A' + c;
+    sprintf(cell->nom + 1, "%d", l + 1);
+
+    cell->contenu[0] = '\0';
+    cell->nbTokens = 0;
+    cell->val = 0.0;
+    cell->nb_successeurs = 0;
+    cell->marque = 0;
+    cell->degre_neg = 0;
+
+    tableau_cellules[nb_cellules++] = cell;
+
+    return cell;
 }
